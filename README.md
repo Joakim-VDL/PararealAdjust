@@ -6,7 +6,7 @@ git clone https://github.com/NewryBenson/PararealAdjust.git
 ```
 2. Create build directory
 ``` shell
-cd Parareal && mkdir build && cd build
+cd PararealAdjust && mkdir build && cd build
 ```
 3. Compile the code
 ``` shell
