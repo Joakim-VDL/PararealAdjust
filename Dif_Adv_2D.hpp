@@ -56,43 +56,27 @@ struct RHS_Dif_Adv_2D:public Problems_2D
         }
         else
         {
-            int num_threads = 32;
+        // FLAT PARALLEL LOOP: much faster on CPU!
+        #pragma omp parallel for
+        for (int idx = 0; idx < N*N; ++idx)
+        {
+            int ii = idx / N;
+            int jj = idx % N;
 
-            #pragma omp parallel for collapse(2)
-            for (int blockIdxx = 0; blockIdxx < (N + num_threads - 1)/num_threads; blockIdxx++)
-            {
-                for (int blockIdxy = 0; blockIdxy < (N + num_threads - 1)/num_threads; blockIdxy++)
-                {
-                    for (int threadIdxx = 0; threadIdxx < num_threads; threadIdxx++)
-                    {
-                        for (int threadIdxy = 0; threadIdxy < num_threads; threadIdxy++)
-                        {
-                            int ii = (blockIdxx * num_threads) + threadIdxx;
-                            int jj = (blockIdxy * num_threads) + threadIdxy;
-
-                            if ((ii < N) && (jj < N))
-                            {
-                                                    //? Diffusion
-                                output[N*ii + jj] =   (input[PBC(ii, jj + 1, N)] - (4.0 * input[PBC(ii, jj, N)]) + input[PBC(ii, jj - 1, N)])/(dx*dx)
-                                                    + (input[PBC(ii + 1, jj, N)] + input[PBC(ii - 1, jj, N)])/(dy*dy)
-                                                    
-                                                    //? Advection
-                                                    + velocity/dx 
-                                                    * (- 2.0/6.0 * input[PBC(ii, jj - 1, N)]
-                                                    - 3.0/6.0 * input[PBC(ii, jj, N)]
-                                                    + 6.0/6.0 * input[PBC(ii, jj + 1, N)]
-                                                    - 1.0/6.0 * input[PBC(ii, jj + 2, N)])
-                                                    + velocity/dy
-                                                    * (- 2.0/6.0 * input[PBC(ii - 1, jj, N)]
-                                                    - 3.0/6.0 * input[PBC(ii, jj, N)]
-                                                    + 6.0/6.0 * input[PBC(ii + 1, jj, N)]
-                                                    - 1.0/6.0 * input[PBC(ii + 2, jj, N)]);
-                            }
-                        }
-                    }
-                }
-            }
-            
+            output[N*ii + jj] =
+                (input[PBC(ii, jj + 1, N)] - (4.0 * input[PBC(ii, jj, N)]) + input[PBC(ii, jj - 1, N)])/(dx*dx)
+              + (input[PBC(ii + 1, jj, N)] + input[PBC(ii - 1, jj, N)])/(dy*dy)
+              + velocity/dx 
+                * (- 2.0/6.0 * input[PBC(ii, jj - 1, N)]
+                   - 3.0/6.0 * input[PBC(ii, jj, N)]
+                   + 6.0/6.0 * input[PBC(ii, jj + 1, N)]
+                   - 1.0/6.0 * input[PBC(ii, jj + 2, N)])
+              + velocity/dy
+                * (- 2.0/6.0 * input[PBC(ii - 1, jj, N)]
+                   - 3.0/6.0 * input[PBC(ii, jj, N)]
+                   + 6.0/6.0 * input[PBC(ii + 1, jj, N)]
+                   - 1.0/6.0 * input[PBC(ii + 2, jj, N)]);
+        }
         }
     }
 
