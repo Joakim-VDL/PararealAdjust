@@ -56,7 +56,6 @@ struct RHS_Dif_Adv_2D:public Problems_2D
         }
         else
         {
-        // FLAT PARALLEL LOOP: much faster on CPU!
         #pragma omp parallel for
         for (int idx = 0; idx < N*N; ++idx)
         {
