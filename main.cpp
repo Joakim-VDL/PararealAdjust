@@ -349,7 +349,7 @@ int main(int argc, char** argv)
     cout << "Number of OpenMP threads   : " << num_threads << endl;
     cout << "==================================================" << endl << endl;
 
-    cout << "Done!" << endl;
+    cout << "Simulations complete!" << endl;
 
     return 0;
 }
