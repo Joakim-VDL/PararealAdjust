@@ -1,4 +1,6 @@
 # Parareal
+Lightning is slightly faster (sometimes a lot) than final for RK2 on GPU. In other cases it fails to consistently outperform on CPU/GPU.
+
 
 1. Install Parareal
 ``` shell
