@@ -24,7 +24,8 @@ __global__ void Dif_Adv_2D_Optimised(
     const double* __restrict__ input,
     double* __restrict__ output)
 {
-    constexpr int TILE = 64; // Block size
+    constexpr int TILE = 64; // Block size, find the max for your GPU 
+    // compile with increasing powers of 2 until you get 'uses too much shared data' 
 
     // Shared memory tile with halo (2 extra cells on each side)
     __shared__ double tile[TILE + 4][TILE + 4];
