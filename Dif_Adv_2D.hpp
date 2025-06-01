@@ -24,7 +24,7 @@ __global__ void Dif_Adv_2D_Optimised(
     const double* __restrict__ input,
     double* __restrict__ output)
 {
-    constexpr int TILE = 16; // Block size
+    constexpr int TILE = 32; // Block size
 
     // Shared memory tile with halo (2 extra cells on each side)
     __shared__ double tile[TILE + 4][TILE + 4];
